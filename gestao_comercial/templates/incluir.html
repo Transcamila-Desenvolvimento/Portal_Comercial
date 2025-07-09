@@ -1,0 +1,1092 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+<style>
+  :root {
+    --primary-color: #118cc4;
+    --primary-hover: #0e76a3;
+    --secondary-color: #6c757d;
+    --secondary-hover: #5a6268;
+    --success-color: #28a745;
+    --border-color: #e9ecef;
+    --text-color: #495057;
+    --light-bg: #f8f9fa;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --error-color: #dc3545;
+  }
+
+  .custom-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    color: var(--text-color);
+    font-weight: 600;
+  }
+
+  .title-line {
+    width: 4px;
+    height: 28px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+
+  .form-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-top: 20px;
+  }
+
+  .form-section {
+    margin-bottom: 35px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+  }
+
+  .form-section:hover {
+    border-color: var(--primary-color);
+  }
+
+  .form-section-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .form-section-title .icon {
+    margin-right: 12px;
+    font-size: 1.3rem;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    flex: 1;
+    position: relative;
+  }
+
+  .form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-color);
+  }
+
+  .form-label.required:after {
+    content: " *";
+    color: var(--error-color);
+  }
+
+  .form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    width: 100%;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    background-color: white;
+    color: var(--text-color);
+  }
+
+  .form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(17, 140, 196, 0.15);
+    outline: none;
+  }
+
+  .form-control[readonly] {
+    background-color: var(--light-bg);
+  }
+
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23495057' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+  }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  .btn-primary-custom {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  .btn-primary-custom:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary-custom {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+
+  .btn-secondary-custom:hover {
+    background-color: var(--secondary-hover);
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .cnpj-group {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  .cnpj-input {
+    flex: 1;
+  }
+
+  .loading {
+    display: none;
+    color: var(--primary-color);
+    margin-left: 10px;
+    font-size: 0.9rem;
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 6px 0 0 6px;
+  }
+
+  .input-group input {
+    border-radius: 0 6px 6px 0 !important;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #e9ecef;
+    color: var(--text-color);
+  }
+
+  .status-badge.new {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .form-navigation {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .nav-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .nav-step:not(:last-child):after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    right: -20px;
+    width: 40px;
+    height: 2px;
+    background-color: var(--border-color);
+  }
+
+  .step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--border-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .step-label {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    font-weight: 500;
+  }
+
+  .nav-step.active .step-number {
+    background-color: var(--primary-color);
+  }
+
+  .nav-step.active .step-label {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+
+  .nav-step.completed .step-number {
+    background-color: var(--success-color);
+  }
+
+  .nav-step.completed .step-label {
+    color: var(--success-color);
+  }
+
+  .nav-step.completed:after {
+    background-color: var(--success-color);
+  }
+
+  .form-section:not(.active-section) {
+    display: none;
+  }
+
+  .form-progress {
+    height: 6px;
+    background-color: var(--border-color);
+    border-radius: 3px;
+    margin-bottom: 30px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .section-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border-color);
+    gap: 12px;
+  }
+
+  /* Campos condicionais */
+  .conditional-field {
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .conditional-field.hidden {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  /* Floating labels melhorado */
+  .floating-label-group {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .floating-label {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    color: #6c757d;
+    transition: all 0.2s;
+    pointer-events: none;
+    background: white;
+    padding: 0 5px;
+    font-size: 0.9rem;
+  }
+
+  .form-control:focus ~ .floating-label,
+  .form-control:not(:placeholder-shown) ~ .floating-label,
+  .form-select:focus ~ .floating-label,
+  .form-select:not([value=""]) ~ .floating-label {
+    top: -10px;
+    left: 10px;
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    background: white;
+    z-index: 1;
+  }
+
+  /* Select com valor selecionado */
+  .form-select:not([value=""]) {
+    color: var(--text-color);
+  }
+
+  /* Validação */
+  .is-invalid {
+    border-color: var(--error-color) !important;
+  }
+
+  .invalid-feedback {
+    color: var(--error-color);
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: none;
+  }
+
+  .is-invalid ~ .invalid-feedback {
+    display: block;
+  }
+
+  @media (max-width: 992px) {
+    .form-row {
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .cnpj-group {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .form-container {
+      padding: 20px;
+    }
+    
+    .form-section {
+      padding: 15px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .form-actions {
+      flex-direction: column-reverse;
+      gap: 15px;
+    }
+    
+    .action-buttons {
+      width: 100%;
+      flex-direction: column;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+    
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    
+    .nav-step {
+      padding: 0 10px;
+    }
+    
+    .nav-step:not(:last-child):after {
+      width: 20px;
+      right: -10px;
+    }
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-10px); }
+  }
+
+  .form-section {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
+  .shake {
+    animation: shake 0.5s;
+  }
+</style>
+{% endblock %}
+
+{% block title %}Nova proposta Comercial +{% endblock %}
+
+{% block 'dashboard' %}
+<div class="custom-container">
+  <!-- Cabeçalho da página -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">
+        <span class="title-line"></span>
+        Nova Proposta Comercial
+      </h2>
+      <p class="text-muted mb-0">Preencha os dados abaixo para criar uma nova proposta</p>
+    </div>
+    <span class="status-badge new">Nova Proposta</span>
+  </div>
+
+  <!-- Navegação por etapas -->
+  <div class="form-navigation mb-4">
+    <div class="nav-step active" data-section="basic">
+      <div class="step-number">1</div>
+      <div class="step-label">Dados Básicos</div>
+    </div>
+    <div class="nav-step" data-section="service">
+      <div class="step-number">2</div>
+      <div class="step-label">Detalhes do Serviço</div>
+    </div>
+    <div class="nav-step" data-section="values">
+      <div class="step-number">3</div>
+      <div class="step-label">Valores</div>
+    </div>
+    <div class="nav-step" data-section="observations">
+      <div class="step-number">4</div>
+      <div class="step-label">Finalização</div>
+    </div>
+  </div>
+
+  <!-- Barra de progresso -->
+  <div class="form-progress">
+    <div class="progress-bar" style="width: 25%"></div>
+  </div>
+
+  <!-- Formulário de inclusão -->
+  <div class="form-container">
+    <form method="post" id="proposal-form">
+      {% csrf_token %}
+
+      <!-- Seção Dados Básicos -->
+      <div class="form-section active-section" id="basic-section">
+        <div class="form-section-title">
+          <i class="bi bi-person-lines-fill icon"></i>
+          <span>Informações Básicas</span>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group floating-label-group">
+            <input type="text" class="form-control" id="proposal-number" value="PROP-2025-{{ next_number }}" readonly placeholder=" ">
+            <label class="floating-label">Número da Proposta</label>
+          </div>
+          
+          <div class="form-group floating-label-group">
+            <input type="date" class="form-control" name="data" required placeholder=" ">
+            <label class="floating-label">Data <span class="required">*</span></label>
+            <div class="invalid-feedback">Por favor, informe a data</div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label required">CNPJ do Cliente</label>
+            <div class="cnpj-group">
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                <input type="text" class="form-control" id="cnpj" placeholder="00.000.000/0000-00" required>
+              </div>
+              <button type="button" class="btn btn-primary-custom cnpj-button" id="consultar-cnpj">
+                <i class="bi bi-search"></i> Consultar
+              </button>
+              <span class="loading" id="loading-cnpj">
+                <i class="bi bi-arrow-repeat spin"></i> Consultando...
+              </span>
+            </div>
+            <div class="invalid-feedback">Por favor, informe um CNPJ válido</div>
+          </div>
+          
+          <div class="form-group floating-label-group">
+            <input type="text" class="form-control" id="razao-social" readonly placeholder=" ">
+            <label class="floating-label">Razão Social</label>
+            <input type="hidden" name="cliente_id" id="cliente-id">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group floating-label-group">
+            <select class="form-select" name="tipo_servico" id="tipo-servico" required>
+              <option value=""></option>
+              <option value="armazem">Armazém</option>
+              <option value="transporte">Transporte</option>
+            </select>
+            <label class="floating-label">Tipo de Serviço <span class="required">*</span></label>
+            <div class="invalid-feedback">Por favor, selecione o tipo de serviço</div>
+          </div>
+          
+          <div class="form-group floating-label-group">
+            <select class="form-select" id="clientes-cadastrados" onchange="selecionarCliente(this)">
+              <option value=""></option>
+              {% for cliente in clientes_cadastrados %}
+                <option value="{{ cliente.id }}" data-cnpj="{{ cliente.cnpj }}" data-razao="{{ cliente.razao_social }}">
+                  {{ cliente.razao_social }} ({{ cliente.cnpj }})
+                </option>
+              {% endfor %}
+            </select>
+            <label class="floating-label">Cliente Cadastrado</label>
+          </div>
+        </div>
+
+        <div class="section-footer">
+          <button type="button" class="btn btn-primary-custom next-section" data-next="service">
+            Próximo <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seção Detalhes do Serviço -->
+      <div class="form-section" id="service-section">
+        <div class="form-section-title">
+          <i class="bi bi-box-seam icon"></i>
+          <span>Detalhes do Serviço</span>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group floating-label-group">
+            <input type="text" class="form-control" name="produto" required placeholder=" ">
+            <label class="floating-label">Produto <span class="required">*</span></label>
+            <div class="invalid-feedback">Por favor, informe o produto</div>
+          </div>
+          
+          <div class="form-group floating-label-group">
+            <input type="number" step="0.01" class="form-control" name="quantidade" required placeholder=" ">
+            <label class="floating-label">Quantidade <span class="required">*</span></label>
+            <div class="invalid-feedback">Por favor, informe a quantidade</div>
+          </div>
+        </div>
+        
+        <!-- Campos condicionais para Transporte -->
+        <div id="transporte-fields" class="conditional-field hidden">
+          <div class="form-row">
+            <div class="form-group floating-label-group">
+              <input type="text" class="form-control" name="origem" placeholder=" ">
+              <label class="floating-label">Origem</label>
+            </div>
+            
+            <div class="form-group floating-label-group">
+              <input type="text" class="form-control" name="destino" placeholder=" ">
+              <label class="floating-label">Destino</label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Campos condicionais para Armazém -->
+        <div id="armazem-fields" class="conditional-field hidden">
+          <div class="form-row">
+            <div class="form-group floating-label-group">
+              <input type="text" class="form-control" name="local_armazenagem" placeholder=" ">
+              <label class="floating-label">Local de Armazenagem</label>
+            </div>
+            
+            <div class="form-group floating-label-group">
+              <input type="number" class="form-control" name="periodo_armazenagem" placeholder=" ">
+              <label class="floating-label">Período (dias)</label>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group floating-label-group">
+              <input type="text" class="form-control" name="tipo_armazem" placeholder=" ">
+              <label class="floating-label">Tipo de Armazém</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-footer">
+          <button type="button" class="btn btn-secondary-custom prev-section" data-prev="basic">
+            <i class="bi bi-arrow-left"></i> Anterior
+          </button>
+          <button type="button" class="btn btn-primary-custom next-section" data-next="values">
+            Próximo <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seção Valores -->
+      <div class="form-section" id="values-section">
+        <div class="form-section-title">
+          <i class="bi bi-currency-dollar icon"></i>
+          <span>Valores e Pagamento</span>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group floating-label-group">
+            <input type="number" step="0.01" class="form-control" name="valor_unitario" required placeholder=" ">
+            <label class="floating-label">Valor Unitário (R$) <span class="required">*</span></label>
+            <div class="invalid-feedback">Por favor, informe o valor unitário</div>
+          </div>
+          
+          <div class="form-group floating-label-group">
+            <input type="text" class="form-control" name="valor_total" readonly placeholder=" ">
+            <label class="floating-label">Valor Total (R$)</label>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group floating-label-group">
+            <select class="form-select" name="forma_pagamento" required>
+              <option value=""></option>
+              <option value="30dd">30 dias após emissão NF</option>
+              <option value="45dd">45 dias após emissão NF</option>
+              <option value="60dd">60 dias após emissão NF</option>
+              <option value="boleto">Boleto bancário</option>
+            </select>
+            <label class="floating-label">Forma de Pagamento <span class="required">*</span></label>
+            <div class="invalid-feedback">Por favor, selecione a forma de pagamento</div>
+          </div>
+          
+          <div class="form-group floating-label-group">
+            <input type="number" class="form-control" name="validade" value="30" required placeholder=" ">
+            <label class="floating-label">Validade da Proposta (dias) <span class="required">*</span></label>
+            <div class="invalid-feedback">Por favor, informe a validade</div>
+          </div>
+        </div>
+
+        <div class="section-footer">
+          <button type="button" class="btn btn-secondary-custom prev-section" data-prev="service">
+            <i class="bi bi-arrow-left"></i> Anterior
+          </button>
+          <button type="button" class="btn btn-primary-custom next-section" data-next="observations">
+            Próximo <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seção Observações -->
+      <div class="form-section" id="observations-section">
+        <div class="form-section-title">
+          <i class="bi bi-chat-square-text icon"></i>
+          <span>Observações e Finalização</span>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Observações Adicionais</label>
+            <textarea class="form-control" name="observacoes" rows="4" placeholder="Informações complementares, termos especiais, etc."></textarea>
+          </div>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="terms-check" required>
+          <label class="form-check-label" for="terms-check">
+            Confirmo que todas as informações estão corretas
+          </label>
+          <div class="invalid-feedback">Você deve confirmar antes de enviar</div>
+        </div>
+
+        <div class="section-footer">
+          <button type="button" class="btn btn-secondary-custom prev-section" data-prev="values">
+            <i class="bi bi-arrow-left"></i> Anterior
+          </button>
+          <button type="submit" class="btn btn-primary-custom">
+            <i class="bi bi-check-circle"></i> Finalizar Proposta
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Máscara para CNPJ
+  document.getElementById('cnpj').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    
+    if (value.length > 12) {
+      value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    } else if (value.length > 8) {
+      value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4');
+    } else if (value.length > 5) {
+      value = value.replace(/^(\d{2})(\d{3})(\d{3})/, '$1.$2.$3');
+    } else if (value.length > 2) {
+      value = value.replace(/^(\d{2})(\d{3})/, '$1.$2');
+    }
+    
+    e.target.value = value;
+  });
+
+  // Consulta CNPJ
+  document.getElementById('consultar-cnpj').addEventListener('click', consultarCNPJ);
+
+  function consultarCNPJ() {
+    const cnpj = document.getElementById('cnpj').value.replace(/\D/g, '');
+    const razaoSocialInput = document.getElementById('razao-social');
+    const loadingElement = document.getElementById('loading-cnpj');
+    
+    if (cnpj.length !== 14) {
+      showAlert('Por favor, insira um CNPJ válido com 14 dígitos', 'error');
+      document.getElementById('cnpj').classList.add('is-invalid');
+      return;
+    }
+    
+    // Mostra loading
+    loadingElement.style.display = 'inline-block';
+    document.getElementById('consultar-cnpj').disabled = true;
+    
+    // Simulação de consulta (substitua pela sua API real)
+    setTimeout(() => {
+      // Aqui você faria a chamada real à API
+      // fetch(`sua-api-de-consulta/${cnpj}`)...
+      
+      // Simulando uma resposta
+      const mockResponse = {
+        razao_social: "EMPRESA EXEMPLO LTDA",
+        cnpj: cnpj
+      };
+      
+      razaoSocialInput.value = mockResponse.razao_social;
+      document.getElementById('cliente-id').value = 'novo-' + cnpj;
+      
+      // Verifica se o cliente já está cadastrado
+      verificarClienteCadastrado(cnpj, mockResponse.razao_social);
+      
+      loadingElement.style.display = 'none';
+      document.getElementById('consultar-cnpj').disabled = false;
+      document.getElementById('cnpj').classList.remove('is-invalid');
+      
+      showAlert('Cliente encontrado com sucesso!', 'success');
+    }, 1500);
+  }
+
+  // Verifica se o CNPJ já está cadastrado
+  function verificarClienteCadastrado(cnpj, razaoSocial) {
+    const selectClientes = document.getElementById('clientes-cadastrados');
+    let encontrado = false;
+    
+    for (let i = 0; i < selectClientes.options.length; i++) {
+      const option = selectClientes.options[i];
+      if (option.dataset.cnpj === cnpj) {
+        encontrado = true;
+        selectClientes.value = option.value;
+        break;
+      }
+    }
+    
+    if (!encontrado) {
+      const novaOption = document.createElement('option');
+      novaOption.value = 'novo-' + cnpj;
+      novaOption.dataset.cnpj = cnpj;
+      novaOption.dataset.razao = razaoSocial;
+      novaOption.textContent = `${razaoSocial} (${formatCNPJ(cnpj)})`;
+      selectClientes.appendChild(novaOption);
+      selectClientes.value = novaOption.value;
+    }
+  }
+
+  // Formata CNPJ para exibição
+  function formatCNPJ(cnpj) {
+    return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+  }
+
+  // Seleciona cliente já cadastrado
+  function selecionarCliente(select) {
+    if (select.value) {
+      const option = select.options[select.selectedIndex];
+      document.getElementById('cnpj').value = formatCNPJ(option.dataset.cnpj);
+      document.getElementById('razao-social').value = option.dataset.razao;
+      document.getElementById('cliente-id').value = option.value;
+      document.getElementById('cnpj').classList.remove('is-invalid');
+    }
+  }
+
+  // Cálculo automático do valor total
+  document.querySelector('input[name="quantidade"]').addEventListener('input', calcularTotal);
+  document.querySelector('input[name="valor_unitario"]').addEventListener('input', calcularTotal);
+
+  function calcularTotal() {
+    const quantidade = parseFloat(document.querySelector('input[name="quantidade"]').value) || 0;
+    const valorUnitario = parseFloat(document.querySelector('input[name="valor_unitario"]').value) || 0;
+    const valorTotal = quantidade * valorUnitario;
+    
+    const valorTotalInput = document.querySelector('input[name="valor_total"]');
+    valorTotalInput.value = valorTotal.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+    
+    // Anima a mudança de valor
+    valorTotalInput.style.transform = 'scale(1.05)';
+    setTimeout(() => {
+      valorTotalInput.style.transform = 'scale(1)';
+    }, 300);
+  }
+
+  // Mostra/oculta campos condicionais baseados no tipo de serviço
+  document.getElementById('tipo-servico').addEventListener('change', function() {
+    const tipoServico = this.value;
+    
+    // Oculta todos os campos condicionais primeiro
+    document.querySelectorAll('.conditional-field').forEach(field => {
+      field.classList.add('hidden');
+    });
+    
+    // Mostra os campos relevantes
+    if (tipoServico === 'transporte') {
+      document.getElementById('transporte-fields').classList.remove('hidden');
+    } else if (tipoServico === 'armazem') {
+      document.getElementById('armazem-fields').classList.remove('hidden');
+    }
+  });
+
+  // Navegação entre seções
+  document.querySelectorAll('.next-section').forEach(button => {
+    button.addEventListener('click', function() {
+      const currentSection = this.closest('.form-section');
+      const nextSectionId = this.dataset.next + '-section';
+      
+      // Valida os campos antes de avançar
+      if (!validateSection(currentSection)) {
+        return;
+      }
+      
+      currentSection.classList.remove('active-section');
+      document.getElementById(nextSectionId).classList.add('active-section');
+      updateNavigation(this.dataset.next);
+    });
+  });
+
+  document.querySelectorAll('.prev-section').forEach(button => {
+    button.addEventListener('click', function() {
+      const currentSection = this.closest('.form-section');
+      const prevSectionId = this.dataset.prev + '-section';
+      
+      currentSection.classList.remove('active-section');
+      document.getElementById(prevSectionId).classList.add('active-section');
+      updateNavigation(this.dataset.prev);
+    });
+  });
+
+  // Atualiza a navegação e progresso
+  function updateNavigation(activeStep) {
+    const steps = {
+      'basic': 1,
+      'service': 2,
+      'values': 3,
+      'observations': 4
+    };
+    
+    const activeIndex = steps[activeStep];
+    const progressPercentage = (activeIndex / 4) * 100;
+    
+    // Atualiza barra de progresso
+    document.querySelector('.progress-bar').style.width = `${progressPercentage}%`;
+    
+    // Atualiza os passos
+    document.querySelectorAll('.nav-step').forEach((step, index) => {
+      step.classList.remove('active', 'completed');
+      
+      if (index + 1 < activeIndex) {
+        step.classList.add('completed');
+      } else if (index + 1 === activeIndex) {
+        step.classList.add('active');
+      }
+    });
+  }
+
+  // Valida os campos obrigatórios de uma seção
+  function validateSection(section) {
+    let isValid = true;
+    const requiredInputs = section.querySelectorAll('[required]');
+    
+    requiredInputs.forEach(input => {
+      if (!input.value && (input.type !== 'checkbox' || !input.checked)) {
+        input.classList.add('is-invalid');
+        isValid = false;
+        
+        // Adiciona animação de shake
+        input.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          input.style.animation = '';
+        }, 500);
+        
+        // Rola até o primeiro campo inválido
+        if (isValid) {
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        input.classList.remove('is-invalid');
+      }
+    });
+    
+    if (!isValid) {
+      showAlert('Por favor, preencha todos os campos obrigatórios', 'error');
+      
+      // Rola até o primeiro campo inválido
+      const firstInvalid = section.querySelector('.is-invalid');
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+    
+    return isValid;
+  }
+
+  // Mostra alerta estilizado
+  function showAlert(message, type) {
+    // Remove alertas existentes
+    document.querySelectorAll('.custom-alert').forEach(alert => alert.remove());
+    
+    const alertBox = document.createElement('div');
+    alertBox.className = `custom-alert alert-${type}`;
+    alertBox.textContent = message;
+    alertBox.style.position = 'fixed';
+    alertBox.style.top = '20px';
+    alertBox.style.right = '20px';
+    alertBox.style.padding = '15px 20px';
+    alertBox.style.borderRadius = '6px';
+    alertBox.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    alertBox.style.zIndex = '1000';
+    alertBox.style.animation = 'fadeIn 0.3s';
+    
+    if (type === 'error') {
+      alertBox.style.backgroundColor = '#f8d7da';
+      alertBox.style.color = '#721c24';
+      alertBox.style.border = '1px solid #f5c6cb';
+    } else {
+      alertBox.style.backgroundColor = '#d4edda';
+      alertBox.style.color = '#155724';
+      alertBox.style.border = '1px solid #c3e6cb';
+    }
+    
+    document.body.appendChild(alertBox);
+    
+    setTimeout(() => {
+      alertBox.style.animation = 'fadeOut 0.3s';
+      setTimeout(() => {
+        alertBox.remove();
+      }, 300);
+    }, 3000);
+  }
+
+  // Inicializa os floating labels
+  function initFloatingLabels() {
+    document.querySelectorAll('.floating-label-group input, .floating-label-group select').forEach(input => {
+      // Para selects, verifica se há um valor selecionado
+      if (input.tagName === 'SELECT') {
+        if (input.value) {
+          input.nextElementSibling.classList.add('active');
+        }
+        
+        input.addEventListener('change', function() {
+          if (this.value) {
+            this.nextElementSibling.classList.add('active');
+          } else {
+            this.nextElementSibling.classList.remove('active');
+          }
+        });
+      } else {
+        // Para inputs normais
+        if (input.value) {
+          input.nextElementSibling.classList.add('active');
+        }
+        
+        input.addEventListener('input', function() {
+          if (this.value) {
+            this.nextElementSibling.classList.add('active');
+          } else {
+            this.nextElementSibling.classList.remove('active');
+          }
+        });
+      }
+      
+      input.addEventListener('focus', function() {
+        this.nextElementSibling.classList.add('active');
+      });
+      
+      input.addEventListener('blur', function() {
+        if (!this.value) {
+          this.nextElementSibling.classList.remove('active');
+        }
+      });
+    });
+  }
+
+  // Inicializa quando o DOM estiver carregado
+  document.addEventListener('DOMContentLoaded', function() {
+    initFloatingLabels();
+    
+    // Ativa campos condicionais baseados no tipo de serviço selecionado
+    const tipoServico = document.getElementById('tipo-servico');
+    if (tipoServico.value) {
+      tipoServico.dispatchEvent(new Event('change'));
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+<style>
+  .custom-container {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .title-with-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .title-line {
+    width: 6px;
+    height: 24px;
+    background-color: #118cc4;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .filter-row .form-control,
+  .filter-row .form-select {
+    flex: 1;
+  }
+
+  .toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .btn-group-top {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  /* Estilos das abas */
+  .nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 1rem;
+  }
+
+  .nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .nav-tabs .nav-link:hover {
+    border-color: #e9ecef #e9ecef #dee2e6;
+    color: #118cc4;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: #118cc4;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+    font-weight: 600;
+  }
+
+  /* Estilos aprimorados para a tabela */
+  .table {
+    font-size: 0.875rem;
+    margin-bottom: 0;
+  }
+
+  .table thead th {
+    background-color: #f8f9fa;
+    border-bottom-width: 1px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #03223d;
+    vertical-align: middle;
+    padding: 0.75rem 1rem;
+  }
+
+  .table tbody td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-top: 1px solid #f1f1f1;
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(17, 140, 196, 0.03);
+  }
+
+  /* Estilos para checkboxes */
+  .form-check-input {
+    width: 1.1em;
+    height: 1.1em;
+    margin-top: 0;
+    cursor: pointer;
+    border: 1px solid #adb5bd;
+  }
+
+  .form-check-input:checked {
+    background-color: #118cc4;
+    border-color: #118cc4;
+  }
+
+  .form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(17, 140, 196, 0.25);
+  }
+
+  /* Badges para status */
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    letter-spacing: 0.5px;
+  }
+
+  /* Botões de ação */
+  .btn-action {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  @media (max-width: 768px) {
+    .filter-row {
+      flex-direction: column;
+    }
+
+    .btn-group-top {
+      position: static;
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .table-responsive {
+      border-radius: 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block title %}Propostas Comerciais{% endblock %}
+
+{% block 'dashboard' %}
+<div class="custom-container position-relative">
+
+  <!-- Título com linha -->
+  <div class="title-with-line">
+    <div class="title-line"></div>
+    <h4 class="m-0">Gestão de propostas comerciais</h4>
+  </div>
+
+  <!-- Abas de navegação -->
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="proposal-tab" data-bs-toggle="tab" data-bs-target="#proposal-content" type="button" role="tab" aria-controls="proposal-content" aria-selected="true">
+        <i class="bi bi-file-earmark-text me-1"></i> Propostas
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard-content" type="button" role="tab" aria-controls="dashboard-content" aria-selected="false">
+        <i class="bi bi-reception-4 me-1"></i> Dashboard
+      </button>
+    </li>
+  </ul>
+
+  <!-- Conteúdo das abas -->
+  <div class="tab-content" id="myTabContent">
+    <!-- Aba Propostas Comerciais -->
+    <div class="tab-pane fade show active" id="proposal-content" role="tabpanel" aria-labelledby="proposal-tab">
+      <!-- Cabeçalho e botão de inclusão -->
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="title-with-line">
+          <div class="title-line"></div>
+          <h5 class="m-0">Listagem de Propostas</h5>
+        </div>
+        <a href="{% url 'incluir_proposta' %}" class="btn" style="background-color: #118cc4; color: white;">
+        <i class="bi bi-plus-circle"></i> Incluir Proposta
+        </a>
+      </div>
+
+      <!-- Filtros simplificados -->
+      <div class="mt-4">
+        <div class="filter-row" id="filter-row">
+          <select class="form-select">
+            <option selected>Todos os clientes</option>
+            <option value="albaugh">Albaugh Brasil</option>
+            <option value="prentiss">Prentiss Química</option>
+          </select>
+
+          <input type="text" class="form-control" placeholder="Nº Proposta">
+          <input type="date" class="form-control" placeholder="Data">
+          <select class="form-select">
+            <option selected>Todos os tipos</option>
+            <option value="armazem">Armazém</option>
+            <option value="transporte">Transporte</option>
+          </select>
+          <select class="form-select">
+            <option selected>Todos os status</option>
+            <option value="aprovada">Aprovada</option>
+            <option value="pendente">Pendente</option>
+            <option value="rejeitada">Rejeitada</option>
+          </select>
+        </div>
+      </div>
+
+      <br>
+
+      <!-- Tabela simplificada -->
+      <div class="table-responsive mt-3">
+        <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th width="40px">
+              </th>
+              <th>Nº Proposta</th>
+              <th>Emissão</th>
+              <th>Cliente</th>
+              <th>Tipo de Serviço</th>
+              <th>Valor (R$)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for Proposta in propostas %}
+            <tr>
+              <td>
+                <input type="checkbox" class="form-check-input">
+              </td>
+              <td><strong>{{Proposta.numero_proposta}}</strong></td>
+              <td>{{ Proposta.data_emissao|date:"d/m/Y" }}</td>
+              <td>{{Proposta.cliente}}</td>
+              <td><span class="badge" style="background-color: #118cc4;">{{Proposta.tipo_servico}}</span></td>
+              <td>{{Proposta.valor_total}}</td>
+              <td>
+              {% if Proposta.status_proposta == "aprovada" %}
+              <span class="badge bg-success">{{ Proposta.status_proposta }}</span>
+              {% elif Proposta.status_proposta == "rejeitada" %}
+              <span class="badge bg-danger">{{ Proposta.status_proposta }}</span>
+              {% elif Proposta.status_proposta == "pendente" %}
+              <span class="badge bg-warning text-dark">{{ Proposta.status_proposta }}</span>
+              {% else %}
+              <span class="badge bg-secondary">{{ Proposta.status_proposta }}</span>
+              {% endif %}
+</td>
+              <td>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Aba Dashboard Comercial -->
+    <div class="tab-pane fade" id="dashboard-content" role="tabpanel" aria-labelledby="dashboard-tab">
+      <div class="title-with-line">
+        <div class="title-line"></div>
+        <h3 class="m-0" style="font-size: 19px;">Dashboard Comercial</h3>
+      </div>
+
+      <!-- Cards de Resumo -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm" style="background-color: #ffffff; border-left: 4px solid #e6f2fa;">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Total Propostas</h5>
+              <h2 class="mb-0">124</h2>
+              <p class="text-muted mb-0"><small>+12% vs último mês</small></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm" style="background-color: #ffffff; border-left: 4px solid #e6f2fa;">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Transporte</h5>
+              <h2 class="mb-0">78</h2>
+              <p class="text-muted mb-0"><small>+8% vs último mês</small></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm" style="background-color: #ffffff; border-left: 4px solid #e6f2fa;">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Armazém</h5>
+              <h2 class="mb-0">46</h2>
+              <p class="text-muted mb-0"><small>+15% vs último mês</small></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm" style="background-color: #ffffff; border-left: 4px solid #e6f2fa;">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Conversão</h5>
+              <h2 class="mb-0">62%</h2>
+              <p class="text-muted mb-0"><small>+5% vs último mês</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos e Visualizações -->
+      <div class="row">
+        <!-- Gráfico de Barras - Propostas por Mês -->
+        <div class="col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+              <h5 class="m-0">Propostas por Mês</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="monthlyChart" height="250"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico de Pizza - Por Categoria -->
+        <div class="col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+              <h5 class="m-0">Status Proposta</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="categoryChart" height="250"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela de Propostas Recentes -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+              <h5 class="m-0">Propostas Recentes</h5>
+              <a href="#" class="btn btn-sm btn-outline-primary">Ver todas</a>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Proposta</th>
+                    <th>Cliente</th>
+                    <th>Categoria</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#00192</td>
+                    <td>Albaugh Brasil</td>
+                    <td><span class="badge" style="background-color: #118cc4;">Transporte</span></td>
+                    <td>R$ 12.450,00</td>
+                    <td><span class="badge bg-success">Aprovado</span></td>
+                    <td>05/06/2025</td>
+                  </tr>
+                  <tr>
+                    <td>#00191</td>
+                    <td>Prentiss Química</td>
+                    <td><span class="badge" style="background-color: #118cc4;">Armazém</span></td>
+                    <td>R$ 8.720,00</td>
+                    <td><span class="badge bg-warning text-dark">Pendente</span></td>
+                    <td>04/06/2025</td>
+                  </tr>
+                  <tr>
+                    <td>#00190</td>
+                    <td>NutriAgro</td>
+                    <td><span class="badge" style="background-color: #118cc4;">Transporte</span></td>
+                    <td>R$ 15.300,00</td>
+                    <td><span class="badge bg-success">Aprovado</span></td>
+                    <td>03/06/2025</td>
+                  </tr>
+                  <tr>
+                    <td>#00189</td>
+                    <td>AgroFertil</td>
+                    <td><span class="badge" style="background-color: #118cc4;">Armazém</span></td>
+                    <td>R$ 6.540,00</td>
+                    <td><span class="badge bg-danger">Rejeitado</span></td>
+                    <td>02/06/2025</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

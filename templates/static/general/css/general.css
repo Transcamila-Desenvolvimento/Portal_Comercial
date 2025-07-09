@@ -1,0 +1,55 @@
+/* Cores principais */
+:root {
+    --sidebar-bg-color: #20272b;
+    --primary-color: #118cc4;
+    --primary-hover-color: #16a8eb;
+    --text-color: white;
+    --submenu-text-color: #ccc;
+    --main-bg-color: #f8f9fa;
+    --separator-color: white;
+}
+
+/* Aplicação das cores */
+.sidebar {
+    background-color: var(--sidebar-bg-color);
+}
+
+.sidebar .nav-link {
+    color: var(--text-color);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.Separação {
+    color: var(--separator-color);
+}
+
+.dropdown-toggle strong,
+.dropdown-toggle {
+    color: var(--text-color) !important;
+}
+
+.submenu a {
+    color: var(--submenu-text-color);
+}
+
+.submenu a:hover {
+    color: var(--text-color);
+}
+
+.home-section {
+    background-color: var(--main-bg-color);
+}
+
+/* Botão de IA */
+.ai-chat-button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.ai-chat-button:hover {
+    background-color: var(--primary-hover-color);
+}

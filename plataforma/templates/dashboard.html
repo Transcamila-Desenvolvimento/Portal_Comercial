@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block 'dashboard' %}
+<div class="container">
+        <div class="container-fluid p-4">
+            <h2>Dashboard</h2>
+            <p>Bem-vindo à plataforma do comercial, {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Visitante{% endif %}!</p>
+        </div>
+</div>
+
+{% endblock %}

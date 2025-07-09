@@ -1,0 +1,79 @@
+/* Layout base */
+body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    padding: 1rem;
+}
+
+.logo {
+    width: 190px;
+    display: block;
+    margin: 0 auto 1rem;
+}
+
+.submenu {
+    padding-left: 20px;
+    display: none;
+}
+
+.submenu.show {
+    display: block;
+}
+
+.submenu a {
+    font-size: 0.9rem;
+}
+
+.home-section {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+/* Componentes */
+.loading-indicator {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+/* Botão de IA */
+.ai-chat-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 999;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.ai-chat-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ai-chat-button i {
+    font-size: 24px;
+}
+
+/* Tipografia e espaçamento */
+.sidebar .nav-link {
+    font-weight: 500;
+}
